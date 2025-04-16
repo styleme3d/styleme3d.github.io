@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+    content="Deformable Neural Radiance Fields creates free-viewpoint portraits (nerfies) from casually captured videos.">
+  <meta name="keywords" content="CuStyle, StyleShot, Gaussian Splatting">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StyleMe3D: Stylization with Disentangled Priors by Multiple Encoders on 3D Gaussians</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7NJ87RENDB"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-7NJ87RENDB');
+  </script>
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <!-- <link rel="stylesheet" href="./static/css/fontawesome.all.min.css"> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <!-- <link rel="icon" href="./static/images/AIGC_Research_light.jpg"> -->
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <button id="theme-toggle" class="button">
+          <span class="icon">
+            <i class="fas fa-moon" id="theme_icon"></i>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">
+              StyleMe3D: Stylization with Disentangled Priors by Multiple Encoders on 3D Gaussians
+            </h1>
+            <!-- 添加CVPR 2025字样 -->
+            <p class="is-size-4 has-text-weight-bold has-text-centered">ACM MM 2025 ID 981</p>
+            <div class="is-size-5 publication-authors has-text-centered">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <video id="teaser" autoplay muted loop playsinline height="100%" src="./static/videos/grid_video.webm"
+          style="border-radius: 10px;"></video>
+        <h2 class="subtitle has-text-centered">
+          <span class="dnerf">StyleMe3D</span> enables versatile, high-quality 3D stylization across diverse styles.
+        </h2>
+      </div>
+    </div>
+  </section>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const video = document.getElementById('teaser');
+      // 设置循环的开始和结束时间（秒），支持毫秒精度
+      const startTime = 0.0;    // 例如：0.5 表示 0.5秒
+      const endTime = 6.61;      // 例如：5.7 表示 5.7秒
+      video.addEventListener('timeupdate', function () {
+        // 精确到小数点后三位（毫秒级别）
+        if (video.currentTime >= endTime) {
+          video.currentTime = startTime;
+          video.play();
+        }
+      });
+    });
+  </script>
+  <section class="hero is-light is-small">
+    <div class="hero-body">
+      <div class="container">
+        <!-- 图片展示 -->
+        <div id="results-grid" class="columns is-centered is-multiline">
+          <div class="column is-one-third">
+            <figure class="image">
+              <img src="./static/images/more_result_chair.png" alt="Chair Image" class="result-image">
+            </figure>
+          </div>
+          <div class="column is-one-third">
+            <figure class="image">
+              <img src="./static/images/more_result_hotdog.png" alt="Hotdog Image" class="result-image">
+            </figure>
+          </div>
+          <div class="column is-one-third">
+            <figure class="image">
+              <img src="./static/images/more_result_mic.png" alt="Mic Image" class="result-image">
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Abstract. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              3D Gaussian Splatting (3D GS) excels in photorealistic scene reconstruction but struggles with stylized
+              scenarios (e.g., cartoons, games) due to fragmented textures, semantic misalignment, and limited
+              adaptability to abstract aesthetics. We propose StyleMe3D, a holistic framework for 3D GS style transfer
+              that integrates multi-modal style conditioning, multi-level semantic alignment, and perceptual quality
+              enhancement. Our key insights include: (1) optimizing only RGB attributes preserves geometric integrity
+              during stylization; (2) disentangling low-, medium-, and high-level semantics is critical for coherent
+              style transfer; (3) scalability across isolated objects and complex scenes is essential for practical
+              deployment. StyleMe3D introduces four novel components: Dynamic Style Score Distillation (DSSD),
+              leveraging Stable Diffusion's latent space for semantic alignment; Contrastive Style Descriptor (CSD) for
+              localized, content-aware texture transfer; Simultaneously Optimized Scale (SOS) to decouple style details
+              and structural coherence; and 3D Gaussian Quality Assessment (3DG-QA), a differentiable aesthetic prior
+              trained on human-rated data to suppress artifacts and enhance visual harmony. Evaluated on NeRF synthetic
+              (objects) and Tanks & Temples (scenes) datasets, StyleMe3D outperforms state-of-the-art methods in
+              preserving geometric details (e.g., carvings on sculptures) and ensuring stylistic consistency across
+              scenes (e.g., coherent lighting in landscapes), while maintaining real-time rendering. This work bridges
+              photorealistic 3D GS and artistic stylization, unlocking applications in gaming, virtual worlds, and
+              digital art.
+            </p>
+          </div>
+        </div>
+      </div>
+      <!--/ Abstract. -->
+    </div>
+  </section>
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Method. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Overview of Our Method</h2>
+          <figure class="image is-centered">
+            <img src="./static/images/styleme3d_pipeline.png" alt="Method Pipeline Illustration">
+          </figure>
+          <div class="content has-text-justified">
+            <p>
+              Overview of our pipeline for 3D stylization with three modules:
+            </p>
+            <p>
+              <strong>(a) Style Purification:</strong> Extracts and refines style representations via Style Cleaning in
+              CLIP space, removing content interference from reference images.
+            </p>
+            <p>
+              <strong>(b) Multi-Expert Stylization:</strong> The Dynamic Style Score Distillation (DSSD) module employs
+              dynamic noise scheduling and adaptive style guidance, integrating latent losses to achieve consistent
+              stylization step by step. Integrates three specialized components within the Dynamic Style Score
+              Distillation (DSSD) framework:
+              Simultaneously Optimized Scale (SOS):Adaptive noise scheduling for texture preservation.
+              Contrastive Style Descriptor (CSD):Separates style and content via contrastive learning for style
+              similarity score.
+            </p>
+            <p>
+              <strong>(c) Progressive Consistency Optimization (Style Outpainting):</strong> Progressive outpainting
+              achieves multi-view style propagation. Ensures coherent through iterative latent alignment, eliminating
+              multi-view dependencies.
+            </p>
+          </div>
+        </div>
+      </div>
+      <!--/ Method. -->
+    </div>
+  </section>
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Experiment. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Visual Results</h2>
+          <figure class="image is-centered">
+            <img src="./static/images/styleme3d_visual_result.png" alt="Visual Result Illustration">
+          </figure>
+          <div class="content has-text-justified">
+            <p>
+              <strong>Visual Results:</strong> This figure demonstrates the performance of our method across five styles
+              (vangogh wheat field, star night, fire nezha, colorful oil, and lighting tiger) applied to five
+              objects(chair, ship, hotdog, lego and mic) and two scenes (man face and train).
+            </p>
+            <p>
+              These results highlight the model's capability to handle two main categories of styles:
+            </p>
+            <ul>
+              <li>
+                <strong>Non-photorealistic Art Styles</strong> (e.g., <em>Cartoon</em>, <em>Drawing</em>): These styles
+                showcase traditional artistic expressions.
+              </li>
+              <li>
+                <strong>State-based Styles</strong> (e.g., <em>Fire</em>, <em>Oil</em>): These styles capture physical
+                properties.
+              </li>
+            </ul>
+            <p>
+              Our method demonstrates versatility and semantic-aware ability in stylizing 3D models while preserving
+              both style fidelity and geometric consistency. For example:
+            </p>
+            <ul>
+              <li>Semantic separation of the legs of the <em>Chair</em> from the seat cushion.</li>
+              <li>Detail texture of <em>Chair</em>.</li>
+              <li>Texture of the fire on the <em>Hotdog</em>.</li>
+              <li>Metallic sheen on the <em>Mic</em>.</li>
+            </ul>
+            <p>
+              These features are effectively preserved, ensuring high-quality results across diverse artistic and
+              physical characteristics.
+            </p>
+          </div>
+        </div>
+      </div>
+      <!--/ Experiment. -->
+    </div>
+  </section>
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Experiment. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Qualitative Comparisons (Object)</h2>
+          <figure class="image is-centered">
+            <img src="./static/images/styleme3d_comparison_object.png" alt="Qualitative Comparison Illustration">
+          </figure>
+          <div class="content has-text-justified">
+            <p>
+              <strong>Qualitative Comparisons on Object Level Stylization.</strong>
+            </p>
+            <!--           <p>
+            <strong>Qualitative Comparisons:</strong> We compare our method against other state-of-the-art (SOTA) approaches: <em>StyleGaussian</em> (<a href="https://kunhao-liu.github.io/StyleGaussian/">Liu et al., 2024</a>), <em>IGS2GS</em> (<a href="https://instruct-gs2gs.github.io/">IGS2GS Reference</a>), and <em>Ref-NPR</em> (<a href="https://ref-npr.github.io/">Zhang et al., 2023</a>) on three datasets (<em>Chair</em>, <em>Hotdog</em>, and <em>Mic</em>) using three styles: <em>Cartoon</em>, <em>Sky Painting</em>, and <em>Fire</em>.
+          </p>
+          <p>
+            The horizontal axis represents the compared methods, while the vertical axis displays different datasets. Our method effectively preserves the original model details, including:
+          </p>
+          <ul>
+            <li>The texture of the <em>Chair</em>.</li>
+            <li>The lighting effects on the <em>Hotdog</em>.</li>
+            <li>The metallic sheen of the <em>Mic</em>.</li>
+          </ul>
+          <p>
+            Compared to other methods, our approach demonstrates stronger semantic understanding, clearly distinguishing key elements such as the sausage, bun, and plate on the <em>Hotdog</em>. This results in more stable and visually coherent stylizations.
+          </p> -->
+          </div>
+        </div>
+      </div>
+      <!--/ Experiment. -->
+    </div>
+  </section>
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Experiment. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Qualitative Comparisons (Scene)</h2>
+          <figure class="image is-centered">
+            <img src="./static/images/styleme3d_comparison_scene.png" alt="Qualitative Comparison Illustration">
+          </figure>
+          <div class="content has-text-justified">
+            <p>
+              <strong>Qualitative Comparisons on Scene Level Stylization.</strong>
+            </p>
+
+          </div>
+        </div>
+      </div>
+      <!--/ Experiment. -->
+    </div>
+  </section>
+
+  <!-- </section> -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Overall Title -->
+      <h2 class="title is-3 has-text-centered">Ablation Studies</h2>
+      <div class="columns is-centered">
+        <!-- Ablation on DSSD -->
+        <div class="column">
+          <div class="content">
+            <h2 class="title is-4">Ablation: DSSD</h2>
+            <img src="./static/images/styleme3d_ablation_dssd.png" alt="DSSD Ablation Study" class="ablation-image">
+            <p>Ablation on <i>DSSD</i> (Dynamic Style Score Distillation)</p>
+          </div>
+        </div>
+        <!--/ Ablation on DSSD -->
+        <!-- Ablation on PSO -->
+        <div class="column">
+          <div class="content">
+            <h2 class="title is-4">Ablation: PSO</h2>
+            <img src="./static/images/styleme3d_ablation_PSO.png" alt="Outpainting Ablation Study"
+              class="ablation-image">
+            <p>Ablation on <i>PSO</i> (Progressive Style Outpainting)</p>
+          </div>
+        </div>
+        <!--/ Ablation on PSO -->
+        <!-- Ablation on Multi-Export -->
+        <div class="column">
+          <div class="content">
+            <h2 class="title is-4">Ablation: Multi-Export</h2>
+            <img src="./static/images/styleme3d_ablation_loss.png" alt="Gaussian Refinement Ablation Study"
+              class="ablation-image">
+            <p>Ablation on <i>Multi-Export</i></p>
+          </div>
+        </div>
+        <!--/ Ablation on Multi-Export -->
+      </div>
+    </div>
+
+  </style> 
+  </section>
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Related Work. -->
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Related Work</h2>
+          <div class="content has-text-justified">
+            <p>
+              <a href="https://arxiv.org/abs/2407.01414">Styleshot: A Snapshot on Any Style</a> (Gao et al., 2024).
+            </p>
+            <p>
+              <a href="https://arxiv.org/abs/2308.06721">Ip-adapter: Text Compatible Image Prompt Adapter for
+                Text-to-Image Diffusion Models</a> (Ye et al., 2023).
+            </p>
+            <p>
+              <a href="https://arxiv.org/abs/2404.02733">Instantstyle: Free Lunch Towards Style-Preserving in
+                Text-to-Image Generation</a> (Wang et al., 2024).
+            </p>
+            <p>
+              <a href="https://dl.acm.org/doi/10.1145/3588432.3591486">3D Gaussian Splatting for Real-Time Radiance
+                Field Rendering</a> (Kerbl et al., 2023).
+            </p>
+            <p>
+              <a href="https://arxiv.org/abs/2403.07807">StyleGaussian: Instant 3D Style Transfer with Gaussian
+                Splatting</a> (Liu et al., 2024).
+            </p>
+            <p>
+              <a href="https://www.idpoisson.fr/galerne/sgsst/">SGSST: Scaling Gaussian Splatting Style Transfer</a>
+              (Bruno Galerne et al., 2024).
+            </p>
+            <!--           <p>
+            <a href="https://instruct-gs2gs.github.io/">Instruct-GS2GS: Editing 3D Gaussian Splats with Instructions</a> (Vachha & Haque, 2024).
+          </p> -->
+          </div>
+        </div>
+      </div>
+      <!--/ Related Work. -->
+    </div>
+  </section>
+  <section class="section">
+    <!-- Animation. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+
+      </div>
+    </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              This website is licensed under a <a rel="license"
+                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+                Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+            <p>
+              This means you are free to borrow the <a href="https://github.com/nerfies/nerfies.github.io">source
+                code</a> of this website,
+              we just ask that you link back to this page in the footer.
+              Please remember to remove the analytics code included in the header of the website which
+              you do not want on your website.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

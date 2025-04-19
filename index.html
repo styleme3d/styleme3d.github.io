@@ -257,32 +257,29 @@
       <div class="container">
         <!-- 图片展示 -->
         <div id="results-grid" class="columns is-centered is-multiline">
-
-<!--           <div class="columns equal-width">  -->
-            <div class="column is-one-third">
-              <figure class="image">
-                <img src="./static/images/teaser_grid_chair.png" alt="Chair Image" class="result-image">
-              </figure>
-            </div>
-<!--           </div> -->
-
-<!--           <div class="columns equal-width">  -->
-            <div class="column is-one-third">
-              <figure class="image">
-                <img src="./static/images/teaser_grid_hotdog.png" alt="Hotdog Image" class="result-image">
-              </figure>
-            </div>
-<!--           </div> -->
-
-<!--           <div class="columns equal-width">  -->
-            <div class="column is-one-third">
-              <figure class="image">
-                <img src="./static/images/teaser_grid_mic.png" alt="Mic Image" class="result-image">
-              </figure>
-            </div>
-<!--           </div> -->
-          
+          <div class="column is-one-third">
+            <figure class="image">
+              <img src="./static/images/teaser_grid_chair.png" alt="Chair Image" class="result-image">
+            </figure>
+          </div>
+          <div class="column is-one-third">
+            <figure class="image">
+              <img src="./static/images/teaser_grid_hotdog.png" alt="Hotdog Image" class="result-image">
+            </figure>
+          </div>
+          <div class="column is-one-third">
+            <figure class="image">
+              <img src="./static/images/teaser_grid_mic.png" alt="Mic Image" class="result-image">
+            </figure>
+          </div>
         </div>
+        <style>
+          .result-image {
+            height: 200px; /* 设置你想要的高度 */
+            object-fit: cover; /* 保持图片的宽高比，同时填充整个容器 */
+            width: 100%; /* 确保图片宽度占满容器 */
+          }
+        </style>
       </div>
     </div>
   </section>

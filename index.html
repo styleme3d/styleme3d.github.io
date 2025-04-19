@@ -264,19 +264,25 @@
         <!-- 图片展示 -->
         <div id="results-grid" class="columns is-centered is-multiline">
           <div class="column is-one-third">
+            <div class="result-image-list">
 <!--             <figure class="image"> -->
               <img src="./static/images/teaser_grid_chair.png" alt="Chair Image" class="result-image">
 <!--             </figure> -->
+            </div>
           </div>
           <div class="column is-one-third">
+            <div class="result-image-list">
 <!--             <figure class="image"> -->
               <img src="./static/images/teaser_grid_hotdog.png" alt="Hotdog Image" class="result-image">
 <!--             </figure> -->
+            </div>
           </div>
           <div class="column is-one-third">
+            <div class="result-image-list">
 <!--             <figure class="image"> -->
               <img src="./static/images/teaser_grid_mic.png" alt="Mic Image" class="result-image">
 <!--             </figure> -->
+            </div>
           </div>
         </div>
 
@@ -284,6 +290,11 @@
           .result-image {
             width: auto; /* 宽度自动，保持图片比例 */
             height: 350px; /* 设置图片高度 */
+          }
+          .result-image-list {
+            display: flex; /* 图片横向排列 */
+            justify-content: center; /* 居中对齐 */
+            gap: 10px; /* 图片之间的间距 */
           }
         </style>
         

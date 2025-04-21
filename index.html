@@ -366,6 +366,32 @@
       <!--/ Method. -->
     </div>
   </section>
+    <!-- Video Comparison Section -->
+    <section class="section">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered">Video Comparisons</h2>
+  
+        <div class="tabs is-centered is-boxed">
+          <ul id="style-tabs">
+            <li class="is-active" data-style="vangogh_wheat_field"><a>Van Gogh Wheat Field</a></li>
+            <li data-style="colorful"><a>Colorful</a></li>
+            <li data-style="landscape"><a>Landscape</a></li>
+            <li data-style="vangogh_like"><a>Van Gogh Like</a></li>
+            <li data-style="nezha"><a>Nezha</a></li>
+            <li data-style="tigger"><a>Tiger</a></li>
+            <li data-style="street"><a>Street</a></li>
+            <li data-style="stick"><a>Stick</a></li>
+            <li data-style="sketch"><a>Sketch</a></li>
+            <li data-style="star_night"><a>Starry Night</a></li>
+            <li data-style="cloud"><a>Cloud</a></li>
+          </ul>
+        </div>
+  
+        <div id="video-comparison-content">
+          <!-- Video content will be loaded here by JavaScript -->
+        </div>
+      </div>
+    </section>
   <section class="section">
     <div class="container is-max-desktop">
       <!-- Experiment. -->
@@ -468,32 +494,7 @@
     </div>
   </section>
 
-  <!-- Video Comparison Section -->
-  <section class="section">
-    <div class="container is-max-desktop">
-      <h2 class="title is-3 has-text-centered">Video Comparisons</h2>
 
-      <div class="tabs is-centered is-boxed">
-        <ul id="style-tabs">
-          <li class="is-active" data-style="vangogh_wheat_field"><a>Van Gogh Wheat Field</a></li>
-          <li data-style="vangogh_like"><a>Van Gogh Like</a></li>
-          <li data-style="street"><a>Street</a></li>
-          <li data-style="tigger"><a>Tiger</a></li>
-          <li data-style="stick"><a>Stick</a></li>
-          <li data-style="sketch"><a>Sketch</a></li>
-          <li data-style="star_night"><a>Starry Night</a></li>
-          <li data-style="cloud"><a>Cloud</a></li>
-          <li data-style="landscape"><a>Landscape</a></li>
-          <li data-style="nezha"><a>Nezha</a></li>
-          <li data-style="colorful"><a>Colorful</a></li>
-        </ul>
-      </div>
-
-      <div id="video-comparison-content">
-        <!-- Video content will be loaded here by JavaScript -->
-      </div>
-    </div>
-  </section>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -501,16 +502,16 @@
       const videoContent = document.getElementById('video-comparison-content');
       const styles = [
         { id: 'vangogh_wheat_field', name: 'Van Gogh Wheat Field' },
+        { id: 'colorful', name: 'Colorful' },
+        { id: 'landscape', name: 'Landscape' },
+        { id: 'nezha', name: 'Nezha' },
+        { id: 'tigger', name: 'Tiger' },
         { id: 'vangogh_like', name: 'Van Gogh Like' },
         { id: 'street', name: 'Street' },
-        { id: 'tigger', name: 'Tiger' },
         { id: 'stick', name: 'Stick' },
         { id: 'sketch', name: 'Sketch' },
         { id: 'star_night', name: 'Starry Night' },
-        { id: 'cloud', name: 'Cloud' },
-        { id: 'landscape', name: 'Landscape' },
-        { id: 'nezha', name: 'Nezha' },
-        { id: 'colorful', name: 'Colorful' }
+        { id: 'cloud', name: 'Cloud' }
       ];
       const objects = ["chair", "drums", "hotdog", "lego", "mic", "ship"];
       const methods = [
